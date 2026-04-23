@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheraFlow — Clear, Simple</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#5AABDC;--blue-light:#E8F5FC;--blue-dark:#2E7FAE;
+  --dark:#1A1A2E;--gray:#6B7280;--gray-light:#F3F4F6;
+  --border:#E0EDF5;--white:#FFFFFF;--danger:#E05252;
+  --success:#27AE60;--text:#1A1A2E;--sidebar:260px;
+}
+body{font-family:'DM Sans',sans-serif;background:#F0F7FC;color:var(--text);min-height:100vh;}
+.screen{display:none;}
+.screen.active{display:flex;}
+
+/* LOGIN */
+#login-screen{min-height:100vh;background:linear-gradient(135deg,#87CEEB 0%,#5AABDC 50%,#2E7FAE 100%);align-items:center;justify-content:center;flex-direction:column;}
+.login-card{background:white;border-radius:20px;padding:48px 40px;width:420px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.15);}
+.logo-mark{width:80px;height:80px;margin:0 auto 12px;position:relative;}
+.logo-head{width:80px;height:80px;}
+.login-title{font-size:30px;font-weight:600;color:var(--dark);letter-spacing:-0.5px;}
+.login-sub{font-size:11px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-bottom:28px;}
+.google-btn{width:100%;padding:13px 24px;border:1.5px solid var(--border);border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;gap:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--dark);cursor:pointer;transition:all .2s;margin-bottom:20px;}
+.google-btn:hover{background:var(--gray-light);border-color:var(--blue);}
+hr{border:none;border-top:1px solid var(--border);margin:0 0 16px;}
+.demo-label{font-size:13px;color:var(--gray);margin-bottom:12px;}
+.demo-user-btn{width:100%;padding:10px 16px;border:1.5px solid var(--blue-light);border-radius:10px;background:var(--blue-light);display:flex;align-items:center;gap:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);cursor:pointer;transition:all .2s;text-align:left;margin-bottom:8px;}
+.demo-user-btn:hover{background:#D0EDFB;border-color:var(--blue);}
+.av{width:38px;height:38px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;}
+
+/* APP */
+#app-screen{min-height:100vh;flex-direction:row;}
+.sidebar{width:var(--sidebar);background:var(--dark);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:fixed;left:0;top:0;bottom:0;z-index:10;}
+.sb-logo{padding:22px 20px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.sb-logo-name{color:white;font-size:20px;font-weight:600;letter-spacing:-0.3px;}
+.sb-logo-tag{color:rgba(255,255,255,0.35);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;}
+.sb-user{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:12px;}
+.sb-user-name{color:white;font-size:14px;font-weight:500;}
+.sb-user-role{color:rgba(255,255,255,0.45);font-size:12px;}
+.sb-nav{flex:1;padding:10px 0;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:rgba(255,255,255,0.55);cursor:pointer;transition:all .2s;font-size:14px;border-left:3px solid transparent;}
+.nav-item:hover{color:white;background:rgba(255,255,255,0.04);}
+.nav-item.active{color:white;background:rgba(90,171,220,0.12);border-left-color:var(--blue);}
+.nav-icon{width:20px;text-align:center;font-size:15px;}
+.sb-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,0.08);}
+.logout-btn{width:100%;padding:9px;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;}
+.logout-btn:hover{background:rgba(255,255,255,0.04);color:white;}
+.main{margin-left:var(--sidebar);flex:1;padding:32px;min-height:100vh;}
+.view{display:none;}
+.view.active{display:block;}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
+.ph-title{font-size:24px;font-weight:600;color:var(--dark);}
+.ph-sub{font-size:14px;color:var(--gray);margin-top:2px;}
+.btn{padding:10px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-primary{background:var(--blue);color:white;}
+.btn-primary:hover{background:var(--blue-dark);}
+.btn-secondary{background:var(--gray-light);color:var(--dark);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--border);}
+.btn-danger{background:#FEE2E2;color:var(--danger);}
+.btn-sm{padding:7px 14px;font-size:13px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stat-card{background:white;border-radius:14px;padding:20px;border:1px solid var(--border);}
+.stat-label{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.stat-value{font-size:28px;font-weight:600;color:var(--dark);}
+.stat-sub{font-size:12px;color:var(--gray);margin-top:3px;}
+
+/* TABLE CARD */
+.tc{background:white;border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px;}
+.tc-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.tc-title{font-size:15px;font-weight:600;color:var(--dark);}
+.search-in{padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:220px;}
+.search-in:focus{border-color:var(--blue);}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:11px 20px;font-size:11px;font-weight:500;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;background:var(--gray-light);border-bottom:1px solid var(--border);}
+td{padding:13px 20px;font-size:14px;border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--blue-light);}
+.pav{width:36px;height:36px;border-radius:50%;background:var(--blue-light);color:var(--blue-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
+.pname-cell{display:flex;align-items:center;gap:12px;}
+.badge{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;}
+.b-active{background:#D1FAE5;color:#065F46;}
+.b-inactive{background:#F3F4F6;color:#6B7280;}
+.b-blue{background:var(--blue-light);color:var(--blue-dark);}
+
+/* FORM */
+.form-card{background:white;border-radius:14px;border:1px solid var(--border);overflow:hidden;}
+.fs{padding:22px 24px;border-bottom:1px solid var(--border);}
+.fs:last-of-type{border-bottom:none;}
+.fs-title{font-size:12px;font-weight:600;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.8px;margin-bottom:18px;}
+.fg2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.fg3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg.full{grid-column:1/-1;}
+label{font-size:13px;font-weight:500;color:var(--gray);}
+input[type=text],input[type=date],input[type=email],input[type=tel],select,textarea{padding:9px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .2s;background:white;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);}
+textarea{resize:vertical;min-height:75px;}
+.cb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.cb-item{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;}
+.cb-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--blue);cursor:pointer;}
+.form-actions{padding:18px 24px;background:var(--gray-light);display:flex;gap:12px;justify-content:flex-end;}
+
+/* DETAIL */
+.dh-card{background:white;border-radius:14px;border:1px solid var(--border);padding:22px;margin-bottom:18px;display:flex;align-items:center;gap:18px;}
+.big-av{width:62px;height:62px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;flex-shrink:0;}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px;}
+.info-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+.ic{background:white;border-radius:14px;border:1px solid var(--border);padding:18px;}
+.ic-title{font-size:11px;font-weight:600;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;}
+.ir{display:flex;flex-direction:column;gap:1px;margin-bottom:8px;}
+.ir:last-child{margin-bottom:0;}
+.ir-label{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:.3px;}
+.ir-value{font-size:14px;color:var(--dark);}
+.session-card{background:white;border-radius:10px;border:1px solid var(--border);padding:14px;margin-bottom:10px;}
+.session-date{font-size:11px;color:var(--gray);margin-bottom:5px;}
+.session-note{font-size:14px;color:var(--dark);}
+.add-note-area{display:flex;gap:10px;margin-bottom:14px;}
+.add-note-area textarea{flex:1;height:65px;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:100;}
+.modal-overlay.active{display:flex;}
+.modal{background:white;border-radius:16px;padding:28px;width:360px;}
+.modal-title{font-size:18px;font-weight:600;margin-bottom:8px;}
+.modal-text{font-size:14px;color:var(--gray);margin-bottom:22px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--dark);color:white;padding:13px 18px;border-radius:10px;font-size:14px;z-index:200;display:none;align-items:center;gap:8px;}
+.toast.show{display:flex;}
+.toast.success{background:#065F46;}
+
+.empty{text-align:center;padding:50px 20px;color:var(--gray);}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.4;}
+.empty-title{font-size:15px;font-weight:500;margin-bottom:6px;}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;margin:2px;background:var(--blue-light);color:var(--blue-dark);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen" class="screen active">
+  <div class="login-card">
+    <svg class="logo-head" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="55" rx="28" ry="35" fill="#1A1A2E"/>
+      <circle cx="50" cy="28" r="22" fill="#1A1A2E"/>
+      <circle cx="44" cy="26" r="5" fill="#87CEEB"/>
+      <circle cx="56" cy="22" r="4" fill="#87CEEB"/>
+      <circle cx="50" cy="32" r="3.5" fill="#87CEEB"/>
+    </svg>
+    <div class="login-title">TheraFlow</div>
+    <div class="login-sub">Clear, Simple...</div>
+    <button class="google-btn" onclick="showGoogleModal()">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Σύνδεση με Google
+    </button>
+    <hr>
+    <div class="demo-label">Δοκίμασε ως χρήστης (demo)</div>
+    <div id="demo-list"></div>
+  </div>
+</div>
+
+<!-- GOOGLE MODAL -->
+<div class="modal-overlay" id="google-modal">
+  <div class="modal">
+    <div class="modal-title">Επίλεξε Λογαριασμό Google</div>
+    <div class="modal-text">Επίλεξε υπάλληλο για σύνδεση</div>
+    <div id="gmodal-list"></div>
+    <div class="modal-actions" style="margin-top:16px;"><button class="btn btn-secondary btn-sm" onclick="closeModal('google-modal')">Άκυρο</button></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen" class="screen">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-name">TheraFlow</div>
+      <div class="sb-logo-tag">Clear, Simple...</div>
+    </div>
+    <div class="sb-user">
+      <div class="av" id="sb-av"></div>
+      <div><div class="sb-user-name" id="sb-name"></div><div class="sb-user-role" id="sb-role"></div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="nav-item active" onclick="showView('dashboard')"><span class="nav-icon">⊞</span> Αρχική</div>
+      <div class="nav-item" onclick="showView('patients')"><span class="nav-icon">👦</span> Παιδιά</div>
+      <div class="nav-item" onclick="showView('departments')"><span class="nav-icon">🏢</span> Τμήματα</div>
+      <div class="nav-item" onclick="showView('add-patient')"><span class="nav-icon">＋</span> Νέο Παιδί</div>
+      <div class="nav-item" onclick="showView('settings')"><span class="nav-icon">⚙</span> Ρυθμίσεις</div>
+    </div>
+    <div class="sb-footer"><button class="logout-btn" onclick="logout()">← Αποσύνδεση</button></div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="ph">
+        <div><div class="ph-title" id="greeting">Καλημέρα!</div><div class="ph-sub">Σύνοψη για σήμερα</div></div>
+        <button class="btn btn-primary" onclick="showView('add-patient')">＋ Νέο Παιδί</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Συνολικά Παιδιά</div><div class="stat-value" id="s-total">0</div><div class="stat-sub">στη λίστα σου</div></div>
+        <div class="stat-card"><div class="stat-label">Ενεργά</div><div class="stat-value" id="s-active" style="color:#065F46;">0</div><div class="stat-sub">σε θεραπεία</div></div>
+        <div class="stat-card"><div class="stat-label">Τμήματα</div><div class="stat-value" id="s-depts">0</div><div class="stat-sub">ενεργά</div></div>
+        <div class="stat-card"><div class="stat-label">Νέα αυτόν τον μήνα</div><div class="stat-value" id="s-new" style="color:var(--blue);">0</div><div class="stat-sub">εγγραφές</div></div>
+      </div>
+      <div class="tc">
+        <div class="tc-header"><div class="tc-title">Πρόσφατα Παιδιά</div><button class="btn btn-secondary btn-sm" onclick="showView('patients')">Όλα →</button></div>
+        <table><thead><tr><th>Παιδί</th><th>Τμήμα</th><th>Ηλικία</th><th>Κατάσταση</th><th></th></tr></thead><tbody id="recent-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- PATIENTS -->
+    <div class="view" id="view-patients">
+      <div class="ph">
+        <div><div class="ph-title">Παιδιά</div><div class="ph-sub">Λίστα όλων των παιδιών</div></div>
+        <button class="btn btn-primary" onclick="showView('add-patient')">＋ Νέο Παιδί</button>
+      </div>
+      <div class="tc">
+        <div class="tc-header"><div class="tc-title" id="pcount">0 παιδιά</div><input type="text" class="search-in" placeholder="🔍 Αναζήτηση..." oninput="filterPt(this.value)"></div>
+        <table><thead><tr><th>Παιδί</th><th>Τμήμα</th><th>Ηλικία</th><th>Κηδεμόνας</th><th>Κατάσταση</th><th></th></tr></thead><tbody id="all-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- DEPARTMENTS -->
+    <div class="view" id="view-departments">
+      <div class="ph"><div><div class="ph-title">Τμήματα</div><div class="ph-sub">Οργάνωση ανά κατηγορία θεραπείας</div></div></div>
+      <div id="depts-cont"></div>
+    </div>
+
+    <!-- ADD/EDIT PATIENT -->
+    <div class="view" id="view-add-patient">
+      <div class="ph">
+        <div><div class="ph-title" id="form-title">Νέο Παιδί</div><div class="ph-sub">Φόρμα εγγραφής</div></div>
+        <button class="btn btn-secondary" onclick="showView('patients')">✕ Άκυρο</button>
+      </div>
+      <form class="form-card" onsubmit="savePt(event)">
+        <div class="fs">
+          <div class="fs-title">👦 Στοιχεία Παιδιού</div>
+          <div class="fg3">
+            <div class="fg"><label>Όνομα *</label><input type="text" id="f-fn" required placeholder="π.χ. Δημήτρης"></div>
+            <div class="fg"><label>Επώνυμο *</label><input type="text" id="f-ln" required placeholder="π.χ. Παπαδόπουλος"></div>
+            <div class="fg"><label>ΑΜΚΑ</label><input type="text" id="f-amka" placeholder="11 ψηφία" maxlength="11"></div>
+            <div class="fg"><label>Ημ/νία Γέννησης *</label><input type="date" id="f-dob" required></div>
+            <div class="fg"><label>Φύλο *</label><select id="f-gender" required><option value="">Επίλεξε...</option><option value="Αγόρι">Αγόρι</option><option value="Κορίτσι">Κορίτσι</option></select></div>
+            <div class="fg"><label>Εθνικότητα</label><input type="text" id="f-nat" placeholder="π.χ. Ελληνική"></div>
+          </div>
+        </div>
+
+        <div class="fs">
+          <div class="fs-title">👨‍👩‍👦 Στοιχεία Κηδεμόνα</div>
+          <div class="fg2">
+            <div class="fg"><label>Ονοματεπώνυμο *</label><input type="text" id="f-guard" required placeholder="Πλήρες όνομα"></div>
+            <div class="fg"><label>Σχέση</label><select id="f-rel"><option value="Γονέας">Γονέας</option><option value="Μητέρα">Μητέρα</option><option value="Πατέρας">Πατέρας</option><option value="Κηδεμόνας">Κηδεμόνας</option><option value="Άλλο">Άλλο</option></select></div>
+            <div class="fg"><label>Τηλέφωνο *</label><input type="tel" id="f-phone" required placeholder="6900000000"></div>
+            <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="email@example.com"></div>
+            <div class="fg full"><label>Διεύθυνση</label><input type="text" id="f-addr" placeholder="Οδός, Αριθμός, ΤΚ, Πόλη"></div>
+          </div>
+        </div>
+
+        <div class="fs">
+          <div class="fs-title">🏫 Στοιχεία Σχολείου</div>
+          <div class="fg3">
+            <div class="fg"><label>Τύπος Σχολείου</label><select id="f-stype"><option value="">Επίλεξε...</option><option>Βρεφονηπιακός Σταθμός</option><option>Νηπιαγωγείο</option><option>Δημοτικό</option><option>Γυμνάσιο</option><option>Λύκειο</option><option>Ειδικό Σχολείο</option><option>Δεν φοιτά</option></select></div>
+            <div class="fg"><label>Τάξη</label><input type="text" id="f-grade" placeholder="π.χ. Α' Δημοτικού"></div>
+            <div class="fg"><label>Επικοινωνία Σχολείου</label><input type="text" id="f-tcon" placeholder="Εκπαιδευτικός / τηλ."></div>
+          </div>
+        </div>
+
+        <div class="fs">
+          <div class="fs-title">🏥 Ιατρικό Ιστορικό & Παραπομπή</div>
+          <div class="fg2">
+            <div class="fg"><label>Παραπομπή από</label><select id="f-refby"><option value="">Επίλεξε...</option><option>Παιδίατρος</option><option>Νευρολόγος</option><option>Ψυχίατρος</option><option>Σχολείο</option><option>Οικογένεια / Ιδία πρωτοβουλία</option><option>Άλλος λογοθεραπευτής</option><option>Άλλο</option></select></div>
+            <div class="fg"><label>Φαρμακευτική Αγωγή</label><input type="text" id="f-med" placeholder="Αν υπάρχει"></div>
+            <div class="fg full"><label>Ιατρικές Διαγνώσεις</label><input type="text" id="f-diag" placeholder="π.χ. ΔΕΠ-Υ, ΦΑΔ, Αυτισμός..."></div>
+            <div class="fg"><label>Ακοή</label><select id="f-hear"><option>Φυσιολογική</option><option>Μειωμένη</option><option>Αδιάγνωστη</option><option>Με ακουστικό βαρηκοΐας</option></select></div>
+          </div>
+          <div style="margin-top:14px;"><label style="display:block;margin-bottom:8px;">Λόγος Παραπομπής</label>
+          <div class="cb-grid">
+            <label class="cb-item"><input type="checkbox" class="rr" value="Γλωσσική Καθυστέρηση"> Γλωσσική Καθυστέρηση</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="Αρθρωτικές Δυσκολίες"> Αρθρωτικές Δυσκολίες</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="Τραυλισμός"> Τραυλισμός</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="Δυσλεξία"> Δυσλεξία</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="Αυτισμός (ΔΑΔ)"> Αυτισμός (ΔΑΔ)</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="Δυσφαγία"> Δυσφαγία</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="ΔΕΠ-Υ"> ΔΕΠ-Υ</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="Κώφωση / Βαρηκοΐα"> Κώφωση / Βαρηκοΐα</label>
+            <label class="cb-item"><input type="checkbox" class="rr" value="Άλλο"> Άλλο</label>
+          </div></div>
+        </div>
+
+        <div class="fs">
+          <div class="fs-title">📋 Αναπτυξιακό Ιστορικό</div>
+          <div class="fg2">
+            <div class="fg"><label>Ιστορικό Κύησης / Τοκετού</label><textarea id="f-preg" placeholder="Φυσιολογικός τοκετός, εβδομάδα κύησης, τυχόν επιπλοκές..."></textarea></div>
+            <div class="fg"><label>Κινητική Ανάπτυξη</label><textarea id="f-motor" placeholder="Πότε περπάτησε, ισορροπία, κινητικές δυσκολίες..."></textarea></div>
+            <div class="fg"><label>Γλωσσική Ανάπτυξη</label><textarea id="f-speech" placeholder="Πρώτες λέξεις, φράσεις, τρέχον επίπεδο ομιλίας..."></textarea></div>
+            <div class="fg"><label>Ύπνος & Διατροφή</label><textarea id="f-sleep" placeholder="Τυχόν δυσκολίες ύπνου, διατροφικές δυσκολίες..."></textarea></div>
+          </div>
+        </div>
+
+        <div class="fs">
+          <div class="fs-title">💊 Πλάνο Θεραπείας</div>
+          <div class="fg3">
+            <div class="fg"><label>Τμήμα *</label><select id="f-dept" required><option value="">Επίλεξε...</option><option>Γλωσσική Καθυστέρηση</option><option>Τραυλισμός</option><option>Δυσλεξία</option><option>Αυτισμός (ΔΑΔ)</option><option>Δυσαρθρία</option><option>Δυσφαγία</option><option>Αρθρωτικές Δυσκολίες</option><option>Άλλο</option></select></div>
+            <div class="fg"><label>Συχνότητα</label><select id="f-freq"><option>1 φορά/εβδ.</option><option>2 φορές/εβδ.</option><option>3 φορές/εβδ.</option><option>Καθημερινά</option></select></div>
+            <div class="fg"><label>Κατάσταση</label><select id="f-status"><option value="active">Ενεργό</option><option value="inactive">Ανενεργό</option></select></div>
+            <div class="fg"><label>Έναρξη Θεραπείας</label><input type="date" id="f-start"></div>
+            <div class="fg full"><label>Θεραπευτικοί Στόχοι</label><textarea id="f-goals" placeholder="Βραχυπρόθεσμοι και μακροπρόθεσμοι στόχοι..."></textarea></div>
+            <div class="fg full"><label>Αρχική Αξιολόγηση</label><textarea id="f-assess" placeholder="Αποτελέσματα αρχικής αξιολόγησης, παρατηρήσεις θεραπευτή..."></textarea></div>
+            <div class="fg full"><label>Γενικές Σημειώσεις</label><textarea id="f-notes" placeholder="Οτιδήποτε άλλο σχετικό..."></textarea></div>
+          </div>
+        </div>
+        <input type="hidden" id="f-eid">
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="showView('patients')">Άκυρο</button>
+          <button type="submit" class="btn btn-primary" id="f-submit">✓ Αποθήκευση</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- PATIENT DETAIL -->
+    <div class="view" id="view-patient-detail">
+      <div class="ph">
+        <div><button class="btn btn-secondary btn-sm" onclick="showView('patients')" style="margin-bottom:10px;">← Πίσω</button><div class="ph-title" id="det-title">—</div></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary btn-sm" onclick="editCurrent()">✏️ Επεξεργασία</button>
+          <button class="btn btn-danger btn-sm" onclick="openModal('del-modal')">🗑 Διαγραφή</button>
+        </div>
+      </div>
+      <div id="det-content"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="view" id="view-settings">
+      <div class="ph"><div class="ph-title">Ρυθμίσεις</div></div>
+      <div class="form-card">
+        <div class="fs"><div class="fs-title">👤 Λογαριασμός</div><div id="set-user"></div></div>
+        <div class="fs">
+          <div class="fs-title">🏢 Τμήματα Κέντρου</div>
+          <p style="font-size:14px;color:var(--gray);margin-bottom:12px;">Διαθέσιμα τμήματα για ανάθεση παιδιών</p>
+          <div><span class="tag">Γλωσσική Καθυστέρηση</span><span class="tag">Τραυλισμός</span><span class="tag">Δυσλεξία</span><span class="tag">Αυτισμός (ΔΑΔ)</span><span class="tag">Δυσαρθρία</span><span class="tag">Δυσφαγία</span><span class="tag">Αρθρωτικές Δυσκολίες</span></div>
+        </div>
+        <div class="fs">
+          <div class="fs-title">💾 Εξαγωγή Δεδομένων</div>
+          <p style="font-size:14px;color:var(--gray);margin-bottom:12px;">Κατεβάστε όλα τα δεδομένα σε αρχείο JSON</p>
+          <button class="btn btn-secondary btn-sm" onclick="exportData()">⬇ Εξαγωγή (.json)</button>
+        </div>
+        <div class="fs">
+          <div class="fs-title">ℹ️ Σχετικά</div>
+          <p style="font-size:14px;color:var(--gray);">TheraFlow v1.0 — Εφαρμογή διαχείρισης λογοθεραπείας.<br>Για υποστήριξη επικοινωνήστε με την ομάδα ανάπτυξης.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="del-modal">
+  <div class="modal">
+    <div class="modal-title">Διαγραφή Παιδιού</div>
+    <div class="modal-text">Είσαι σίγουρος; Αυτή η ενέργεια δεν αναιρείται.</div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal('del-modal')">Άκυρο</button>
+      <button class="btn btn-danger btn-sm" onclick="deletePt()">Διαγραφή</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const EMPLOYEES=[
+  {id:1,name:"Μαρία Παπαδοπούλου",email:"maria@theraflow.gr",role:"Λογοθεραπεύτρια",av:"ΜΠ"},
+  {id:2,name:"Νίκος Γεωργίου",email:"nikos@theraflow.gr",role:"Λογοθεραπευτής",av:"ΝΓ"},
+  {id:3,name:"Ελένη Κωνσταντίνου",email:"eleni@theraflow.gr",role:"Λογοθεραπεύτρια",av:"ΕΚ"},
+  {id:4,name:"Γιώργος Αναστασίου",email:"giorgos@theraflow.gr",role:"Λογοθεραπευτής",av:"ΓΑ"}
+];
+let CU=null, CID=null;
+
+function getPts(){if(!CU)return[];return JSON.parse(localStorage.getItem('tf_'+CU.id)||'[]');}
+function savePts(a){localStorage.setItem('tf_'+CU.id,JSON.stringify(a));}
+
+function age(dob){
+  const t=new Date(),b=new Date(dob);
+  let y=t.getFullYear()-b.getFullYear();
+  if(t.getMonth()<b.getMonth()||(t.getMonth()===b.getMonth()&&t.getDate()<b.getDate()))y--;
+  if(y<2){const m=(t.getFullYear()-b.getFullYear())*12+t.getMonth()-b.getMonth();return m+' μήνες';}
+  return y+' ετών';
+}
+function ini(f,l){return((f?.[0]||'')+(l?.[0]||'')).toUpperCase();}
+function bActive(s){return s==='active'?'<span class="badge b-active">Ενεργό</span>':'<span class="badge b-inactive">Ανενεργό</span>';}
+
+function renderDemo(containerId){
+  document.getElementById(containerId).innerHTML=EMPLOYEES.map(e=>`<button class="demo-user-btn" onclick="login(${e.id})"><div class="av">${e.av}</div><div><div style="font-weight:500;font-size:14px;">${e.name}</div><div style="font-size:12px;color:var(--gray);">${e.role}</div></div></button>`).join('');
+}
+function showGoogleModal(){
+  document.getElementById('gmodal-list').innerHTML=EMPLOYEES.map(e=>`<button class="demo-user-btn" onclick="login(${e.id});closeModal('google-modal')"><div class="av">${e.av}</div><div><div style="font-weight:500;font-size:14px;">${e.name}</div><div style="font-size:12px;color:var(--gray);">${e.email}</div></div></button>`).join('');
+  openModal('google-modal');
+}
+function openModal(id){document.getElementById(id).classList.add('active');}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+
+function login(uid){
+  CU=EMPLOYEES.find(e=>e.id===uid);
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+  document.getElementById('sb-av').textContent=CU.av;
+  document.getElementById('sb-name').textContent=CU.name;
+  document.getElementById('sb-role').textContent=CU.role;
+  const h=new Date().getHours();
+  document.getElementById('greeting').textContent=(h<12?'Καλημέρα':h<18?'Καλησπέρα':'Καλησπέρα')+', '+CU.name.split(' ')[0]+'!';
+  document.getElementById('set-user').innerHTML=`<div style="display:flex;align-items:center;gap:16px;"><div class="big-av">${CU.av}</div><div><div style="font-size:16px;font-weight:600;">${CU.name}</div><div style="font-size:14px;color:var(--gray);">${CU.role}</div><div style="font-size:13px;color:var(--gray);">${CU.email}</div></div></div>`;
+  if(getPts().length===0&&uid===1)seedDemo();
+  showView('dashboard');
+}
+function logout(){CU=null;document.getElementById('app-screen').classList.remove('active');document.getElementById('login-screen').classList.add('active');}
+
+function showView(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v)?.classList.add('active');
+  const nm={dashboard:0,patients:1,departments:2,'add-patient':3,settings:4};
+  if(nm[v]!==undefined)document.querySelectorAll('.nav-item')[nm[v]]?.classList.add('active');
+  if(v==='dashboard')refreshDash();
+  if(v==='patients')refreshPts();
+  if(v==='departments')refreshDepts();
+  if(v==='add-patient'){document.getElementById('form-title').textContent='Νέο Παιδί';document.getElementById('f-submit').textContent='✓ Αποθήκευση';document.getElementById('f-eid').value='';document.querySelector('form').reset();document.getElementById('f-start').value=new Date().toISOString().split('T')[0];}
+}
+
+function ptRow(p,full=true){
+  const a=p.dob?age(p.dob):'—';
+  return`<tr>
+    <td><div class="pname-cell"><div class="pav">${ini(p.fn,p.ln)}</div><div><div style="font-weight:500;">${p.fn} ${p.ln}</div><div style="font-size:12px;color:var(--gray);">${p.gender||''}</div></div></div></td>
+    <td><span class="badge b-blue">${p.dept||'—'}</span></td>
+    <td>${a}</td>
+    ${full?`<td>${p.guard||'—'}</td>`:''}
+    <td>${bActive(p.status)}</td>
+    <td><button class="btn btn-secondary btn-sm" onclick="viewPt('${p.id}')">Προβολή</button></td>
+  </tr>`;
+}
+
+function refreshDash(){
+  const ps=getPts(),act=ps.filter(p=>p.status==='active');
+  const depts=[...new Set(ps.map(p=>p.dept).filter(Boolean))];
+  const now=new Date(),nm=ps.filter(p=>{const d=new Date(p.created);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});
+  document.getElementById('s-total').textContent=ps.length;
+  document.getElementById('s-active').textContent=act.length;
+  document.getElementById('s-depts').textContent=depts.length;
+  document.getElementById('s-new').textContent=nm.length;
+  const recent=ps.slice(-5).reverse();
+  document.getElementById('recent-tbody').innerHTML=recent.length?recent.map(p=>ptRow(p,false)).join(''):`<tr><td colspan="5"><div class="empty"><div class="empty-icon">👦</div><div class="empty-title">Δεν υπάρχουν παιδιά ακόμα</div><button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="showView('add-patient')">＋ Νέο Παιδί</button></div></td></tr>`;
+}
+
+function refreshPts(f=''){
+  const ps=getPts();
+  const fl=f?ps.filter(p=>`${p.fn} ${p.ln} ${p.dept}`.toLowerCase().includes(f.toLowerCase())):ps;
+  document.getElementById('pcount').textContent=fl.length+' παιδιά';
+  document.getElementById('all-tbody').innerHTML=fl.length?fl.map(p=>ptRow(p,true)).join(''):`<tr><td colspan="6"><div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">Δεν βρέθηκαν αποτελέσματα</div></div></td></tr>`;
+}
+function filterPt(v){refreshPts(v);}
+
+function refreshDepts(){
+  const ps=getPts(),dm={};
+  ps.forEach(p=>{if(!p.dept)return;if(!dm[p.dept])dm[p.dept]=[];dm[p.dept].push(p);});
+  const c=document.getElementById('depts-cont');
+  if(!Object.keys(dm).length){c.innerHTML=`<div class="empty"><div class="empty-icon">🏢</div><div class="empty-title">Δεν υπάρχουν τμήματα ακόμα</div><div>Πρόσθεσε παιδιά για να εμφανιστούν</div></div>`;return;}
+  c.innerHTML=Object.entries(dm).map(([d,kids])=>`<div class="tc"><div class="tc-header"><div class="tc-title">${d}</div><span class="badge b-blue">${kids.length} παιδιά</span></div><table><thead><tr><th>Παιδί</th><th>Ηλικία</th><th>Κατάσταση</th><th></th></tr></thead><tbody>${kids.map(p=>`<tr><td><div class="pname-cell"><div class="pav">${ini(p.fn,p.ln)}</div><div style="font-weight:500;">${p.fn} ${p.ln}</div></div></td><td>${p.dob?age(p.dob):'—'}</td><td>${bActive(p.status)}</td><td><button class="btn btn-secondary btn-sm" onclick="viewPt('${p.id}')">Προβολή</button></td></tr>`).join('')}</tbody></table></div>`).join('');
+}
+
+function viewPt(id){
+  const ps=getPts(),p=ps.find(x=>x.id===id);
+  if(!p)return;
+  CID=id;
+  document.getElementById('det-title').textContent=p.fn+' '+p.ln;
+  const rr=Array.isArray(p.rr)?p.rr.join(', '):(p.rr||'—');
+  document.getElementById('det-content').innerHTML=`
+    <div class="dh-card">
+      <div class="big-av">${ini(p.fn,p.ln)}</div>
+      <div style="flex:1;">
+        <div style="font-size:22px;font-weight:600;">${p.fn} ${p.ln}</div>
+        <div style="font-size:14px;color:var(--gray);margin-top:3px;">${p.gender||''} ${p.dob?'• '+age(p.dob):''} ${p.amka?'• ΑΜΚΑ: '+p.amka:''}</div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;"><span class="badge b-blue">${p.dept||'—'}</span>${bActive(p.status)}<span class="badge" style="background:#F3F4F6;color:#374151;">${p.freq||''}</span></div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="ic"><div class="ic-title">👨‍👩‍👦 Κηδεμόνας</div>
+        <div class="ir"><div class="ir-label">Ονοματεπώνυμο</div><div class="ir-value">${p.guard||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Σχέση</div><div class="ir-value">${p.rel||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Τηλέφωνο</div><div class="ir-value" style="color:var(--blue);">${p.phone||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Email</div><div class="ir-value">${p.email||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Διεύθυνση</div><div class="ir-value">${p.addr||'—'}</div></div>
+      </div>
+      <div class="ic"><div class="ic-title">🏥 Ιατρικά</div>
+        <div class="ir"><div class="ir-label">Παραπομπή από</div><div class="ir-value">${p.refby||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Διάγνωση</div><div class="ir-value">${p.diag||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Αγωγή</div><div class="ir-value">${p.med||'Καμία'}</div></div>
+        <div class="ir"><div class="ir-label">Ακοή</div><div class="ir-value">${p.hear||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Λόγοι παραπομπής</div><div class="ir-value">${rr}</div></div>
+      </div>
+      <div class="ic"><div class="ic-title">🏫 Σχολείο</div>
+        <div class="ir"><div class="ir-label">Τύπος</div><div class="ir-value">${p.stype||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Τάξη</div><div class="ir-value">${p.grade||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Επικοινωνία</div><div class="ir-value">${p.tcon||'—'}</div></div>
+      </div>
+    </div>
+    <div class="info-grid-2">
+      <div class="ic"><div class="ic-title">📋 Αναπτυξιακό Ιστορικό</div>
+        <div class="ir"><div class="ir-label">Κύηση / Τοκετός</div><div class="ir-value">${p.preg||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Κινητική ανάπτυξη</div><div class="ir-value">${p.motor||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Γλωσσική ανάπτυξη</div><div class="ir-value">${p.speech||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Ύπνος & Διατροφή</div><div class="ir-value">${p.sleep||'—'}</div></div>
+      </div>
+      <div class="ic"><div class="ic-title">💊 Θεραπεία</div>
+        <div class="ir"><div class="ir-label">Έναρξη</div><div class="ir-value">${p.start||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Συχνότητα</div><div class="ir-value">${p.freq||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Στόχοι</div><div class="ir-value">${p.goals||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Αρχική αξιολόγηση</div><div class="ir-value">${p.assess||'—'}</div></div>
+        <div class="ir"><div class="ir-label">Σημειώσεις</div><div class="ir-value">${p.notes||'—'}</div></div>
+      </div>
+    </div>
+    <div class="tc"><div class="tc-header"><div class="tc-title">📝 Ημερολόγιο Συνεδριών</div></div>
+      <div style="padding:16px;">
+        <div class="add-note-area">
+          <textarea id="new-note" placeholder="Σημείωση για τη σημερινή συνεδρία..."></textarea>
+          <button class="btn btn-primary" onclick="addNote('${p.id}')" style="align-self:flex-end;">＋ Προσθήκη</button>
+        </div>
+        <div id="notes-list">
+          ${(p.sessions||[]).length===0?'<div style="text-align:center;padding:20px;font-size:14px;color:var(--gray);">Δεν υπάρχουν σημειώσεις ακόμα</div>':
+            [...(p.sessions||[])].reverse().map(s=>`<div class="session-card"><div class="session-date">${new Date(s.d).toLocaleDateString('el-GR',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div><div class="session-note">${s.n}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  showView('patient-detail');
+}
+
+function addNote(pid){
+  const n=document.getElementById('new-note').value.trim();
+  if(!n)return;
+  const ps=getPts(),p=ps.find(x=>x.id===pid);
+  if(!p)return;
+  if(!p.sessions)p.sessions=[];
+  p.sessions.push({d:new Date().toISOString(),n});
+  savePts(ps);toast('Η σημείωση αποθηκεύτηκε ✓','success');
+  viewPt(pid);
+}
+
+function editCurrent(){
+  const ps=getPts(),p=ps.find(x=>x.id===CID);
+  if(!p)return;
+  document.getElementById('form-title').textContent='Επεξεργασία: '+p.fn+' '+p.ln;
+  document.getElementById('f-submit').textContent='✓ Ενημέρωση';
+  document.getElementById('f-eid').value=p.id;
+  const M={fn:'f-fn',ln:'f-ln',amka:'f-amka',dob:'f-dob',gender:'f-gender',nat:'f-nat',guard:'f-guard',rel:'f-rel',phone:'f-phone',email:'f-email',addr:'f-addr',stype:'f-stype',grade:'f-grade',tcon:'f-tcon',refby:'f-refby',med:'f-med',diag:'f-diag',hear:'f-hear',preg:'f-preg',motor:'f-motor',speech:'f-speech',sleep:'f-sleep',dept:'f-dept',freq:'f-freq',status:'f-status',start:'f-start',goals:'f-goals',assess:'f-assess',notes:'f-notes'};
+  Object.entries(M).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.value=p[k]||'';});
+  document.querySelectorAll('.rr').forEach(cb=>{cb.checked=(p.rr||[]).includes(cb.value);});
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('view-add-patient').classList.add('active');
+  document.querySelectorAll('.nav-item')[3].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function savePt(e){
+  e.preventDefault();
+  const eid=document.getElementById('f-eid').value;
+  const rr=[...document.querySelectorAll('.rr:checked')].map(c=>c.value);
+  const d={
+    id:eid||'p'+Date.now(),
+    created:eid?null:new Date().toISOString(),
+    fn:document.getElementById('f-fn').value,ln:document.getElementById('f-ln').value,
+    amka:document.getElementById('f-amka').value,dob:document.getElementById('f-dob').value,
+    gender:document.getElementById('f-gender').value,nat:document.getElementById('f-nat').value,
+    guard:document.getElementById('f-guard').value,rel:document.getElementById('f-rel').value,
+    phone:document.getElementById('f-phone').value,email:document.getElementById('f-email').value,
+    addr:document.getElementById('f-addr').value,stype:document.getElementById('f-stype').value,
+    grade:document.getElementById('f-grade').value,tcon:document.getElementById('f-tcon').value,
+    refby:document.getElementById('f-refby').value,med:document.getElementById('f-med').value,
+    diag:document.getElementById('f-diag').value,hear:document.getElementById('f-hear').value,
+    preg:document.getElementById('f-preg').value,motor:document.getElementById('f-motor').value,
+    speech:document.getElementById('f-speech').value,sleep:document.getElementById('f-sleep').value,
+    rr,dept:document.getElementById('f-dept').value,freq:document.getElementById('f-freq').value,
+    status:document.getElementById('f-status').value,start:document.getElementById('f-start').value,
+    goals:document.getElementById('f-goals').value,assess:document.getElementById('f-assess').value,
+    notes:document.getElementById('f-notes').value
+  };
+  let ps=getPts();
+  if(eid){const i=ps.findIndex(p=>p.id===eid);if(i!==-1){d.created=ps[i].created;d.sessions=ps[i].sessions;ps[i]=d;}toast('Οι αλλαγές αποθηκεύτηκαν ✓','success');}
+  else{d.sessions=[];ps.push(d);toast('Το παιδί προστέθηκε ✓','success');}
+  savePts(ps);showView('patients');
+}
+
+function deletePt(){
+  let ps=getPts();ps=ps.filter(p=>p.id!==CID);savePts(ps);closeModal('del-modal');toast('Το παιδί διαγράφηκε.');showView('patients');
+}
+
+function exportData(){
+  const b=new Blob([JSON.stringify({user:CU,patients:getPts(),exported:new Date().toISOString()},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='theraflow-'+new Date().toISOString().split('T')[0]+'.json';a.click();
+}
+
+function toast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function seedDemo(){
+  savePts([
+    {id:'p1',created:new Date(2025,9,1).toISOString(),fn:'Αλέξης',ln:'Θεοδώρου',dob:'2018-03-15',gender:'Αγόρι',amka:'11032318001',guard:'Θεοδώρα Θεοδώρου',rel:'Μητέρα',phone:'6944123456',email:'theodora@email.com',addr:'Αριστοτέλους 12, Θεσσαλονίκη',stype:'Νηπιαγωγείο',grade:'Νήπιο',tcon:'',refby:'Παιδίατρος',med:'',diag:'',hear:'Φυσιολογική',preg:'Φυσιολογικός τοκετός, 38η εβδομάδα',motor:'Φυσιολογική',speech:'Καθυστέρηση 6+ μήνες, περιορισμένο λεξιλόγιο',sleep:'',rr:['Γλωσσική Καθυστέρηση'],dept:'Γλωσσική Καθυστέρηση',freq:'2 φορές/εβδ.',status:'active',start:'2025-10-01',goals:'Επέκταση λεξιλογίου, σχηματισμός 2λεκτικών προτάσεων',assess:'Εκφραστική γλώσσα 18μηνών. Κατανόηση φυσιολογική.',notes:'',sessions:[{d:new Date(2025,9,8).toISOString(),n:'Καλή συνεργασία. Εργασία με κάρτες ζώων. Απόδοση 7/10.'},{d:new Date(2025,9,15).toISOString(),n:'Νέες λέξεις: μπάλα, γάτα, νερό. Πρόοδος ορατή.'}]},
+    {id:'p2',created:new Date(2025,10,5).toISOString(),fn:'Σοφία',ln:'Μακρή',dob:'2016-07-22',gender:'Κορίτσι',amka:'22072216002',guard:'Κώστας Μακρής',rel:'Πατέρας',phone:'6955234567',email:'makris@email.com',addr:'Εγνατίας 45, Θεσσαλονίκη',stype:'Δημοτικό',grade:"Β' Δημοτικού",tcon:'Κα Σταυρίδου / 2310000000',refby:'Σχολείο',med:'',diag:'Δυσλεξία',hear:'Φυσιολογική',preg:'Καισαρική τομή',motor:'Φυσιολογική',speech:'Δυσκολίες ανάγνωσης και γραφής',sleep:'',rr:['Δυσλεξία'],dept:'Δυσλεξία',freq:'2 φορές/εβδ.',status:'active',start:'2025-11-05',goals:'Βελτίωση φωνολογικής επίγνωσης και αναγνωστικής ευχέρειας',assess:'Φωνολογική επίγνωση: χαμηλή. Ανάγνωση 1 έτος πίσω.',notes:'Πολύ συνεργάσιμη. Χρειάζεται ενθάρρυνση.',sessions:[]},
+    {id:'p3',created:new Date(2025,9,20).toISOString(),fn:'Πέτρος',ln:'Δημητρίου',dob:'2015-01-10',gender:'Αγόρι',amka:'10011515003',guard:'Ελένη Δημητρίου',rel:'Μητέρα',phone:'6977345678',email:'dimheleni@email.com',addr:'Βενιζέλου 8, Θεσσαλονίκη',stype:'Δημοτικό',grade:"Γ' Δημοτικού",tcon:'',refby:'Παιδίατρος',med:'',diag:'',hear:'Φυσιολογική',preg:'Φυσιολογικός',motor:'Φυσιολογική',speech:'Τραυλισμός από 4 ετών, επιδεινώνεται υπό άγχος',sleep:'',rr:['Τραυλισμός'],dept:'Τραυλισμός',freq:'1 φορά/εβδ.',status:'active',start:'2025-10-20',goals:'Μείωση τραυλισμού, αύξηση ευχέρειας ομιλίας, διαχείριση άγχους',assess:'Ποσοστό τραυλισμού 15%. Άγχος χαμηλό.',notes:'',sessions:[]}
+  ]);
+}
+
+renderDemo('demo-list');
+</script>
+</body>
+</html>
